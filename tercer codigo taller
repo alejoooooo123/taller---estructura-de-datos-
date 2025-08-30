@@ -1,0 +1,74 @@
+import java.util.*;
+
+class GrafoLista {
+    private Map<String, List<String>> grafo;
+
+    public GrafoLista() {
+        grafo = new HashMap<>();
+    }
+
+    public void agregarVertice(String v) {
+        grafo.putIfAbsent(v, new ArrayList<>());
+    }
+
+    public void agregarArista(String v1, String v2) {
+        grafo.get(v1).add(v2);
+        grafo.get(v2).add(v1);
+    }
+
+    public void mostrarGrafo() {
+        for (String v : grafo.keySet()) {
+            System.out.println(v + " -> " + grafo.get(v));
+        }
+    }
+
+    public void dfs(String inicio) {
+        Set<String> visitados = new HashSet<>();
+        Stack<String> stack = new Stack<>();
+        stack.push(inicio);
+        System.out.print("DFS desde " + inicio + ": ");
+        while (!stack.isEmpty()) {
+            String nodo = stack.pop();
+            if (!visitados.contains(nodo)) {
+                System.out.print(nodo + " ");
+                visitados.add(nodo);
+                for (String vecino : grafo.get(nodo)) {
+                    if (!visitados.contains(vecino)) {
+                        stack.push(vecino);
+                    }
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public void bfs(String inicio) {
+        Set<String> visitados = new HashSet<>();
+        Queue<String> cola = new LinkedList<>();
+        cola.add(inicio);
+        System.out.print("BFS desde " + inicio + ": ");
+        while (!cola.isEmpty()) {
+            String nodo = cola.poll();
+            if (!visitados.contains(nodo)) {
+                System.out.print(nodo + " ");
+                visitados.add(nodo);
+                cola.addAll(grafo.get(nodo));
+            }
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        GrafoLista g = new GrafoLista();
+        g.agregarVertice("A");
+        g.agregarVertice("B");
+        g.agregarVertice("C");
+        g.agregarVertice("D");
+        g.agregarArista("A", "B");
+        g.agregarArista("A", "C");
+        g.agregarArista("B", "D");
+        g.mostrarGrafo();
+        g.dfs("A");
+        g.bfs("A");
+    }
+}
